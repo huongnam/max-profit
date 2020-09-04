@@ -7,17 +7,14 @@ from datetime import date, timedelta
 import time
 
 
-def compute_max_profit(df):
-    return (df['rate'].max())
+def compute_max_profit(lst):
+    return max(lst)
 
-
-if __name__ == "__main__":
-    with open('data/exchange_rate.aud.06_2020.07_2020.csv', 'w') as f:
+def parse_text(url, file):
+    with open(file, 'w') as f:
         f.write('date,rate\n')
     driver = webdriver.Chrome(r'D:\courses\ds101\ds101ex02template\chromedriver_win32\chromedriver.exe') 
-    driver.get('https://portal.vietcombank.com.vn/Personal/TG/Pages/ty-gia.aspx')
-
-    list_rates = []
+    driver.get(url)
     start_date = date(2020, 6, 1)
     end_date = date(2020, 7, 31)
     delta = timedelta(days=1)
@@ -38,14 +35,18 @@ if __name__ == "__main__":
                     with open('data/exchange_rate.aud.06_2020.07_2020.csv', 'a') as f:
                         f.write(",". join((date_string, str(rate)+"\n")))
         start_date += delta
+
+if __name__ == "__main__":
+
+    parse_text('https://portal.vietcombank.com.vn/Personal/TG/Pages/ty-gia.aspx', 'data/exchange_rate.aud.06_2020.07_2020.csv')
     # load your data frame from data/exchange_rate.aud.06_2020.07_2020.csv
     df = pd.read_csv('data/exchange_rate.aud.06_2020.07_2020.csv')
 
     # convert to list
-    # list_exchange_rates = df.values.tolist()
+    list_exchange_rates = df['rate'].tolist()
 
     # compute max profit we can achieve
-    max_profit = compute_max_profit(df)
+    max_profit = compute_max_profit(list_exchange_rates)
 
     print('After many complicate calculations ...')
     print('Max profit we can get is', max_profit)
